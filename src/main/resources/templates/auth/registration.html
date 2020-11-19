@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+    <title>Registration </title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container ">
+    <div class="mx-auto" style="width: 500px;">
+        <h1 class="text-body ">ABC Search Registration</h1>
+            <form  action="/registration" th:object="${user}" method="POST">
+                <h6 class="ml-1 text-dark">First Name</h6>
+                <input minlength="5" required type="text"  th:field="*{firstName}" placeholder="First Name" class="form-control"/><br>
+                <h6 class="ml-1 text-dark">Last Name</h6>
+                <input minlength="5" required type="text"  th:field="*{lastName}" placeholder="Last Name" class="form-control"/><br>
+                <h6 class="ml-1 text-dark">Email </h6>
+                <input minlength="5" required type="email"  th:field="*{username}" placeholder="email" class="form-control"/><br>
+                <h6 class="ml-1 text-dark">Password</h6>
+                <input minlength="5" required type="password" th:field="*{password}" placeholder="password" class="form-control"/><br>
+
+
+                <button type="submit" class="btn btn-block btn-outline-dark shadow">Register now</button>
+            </form>
+      </div>
+</div>
+</body>
+</html>

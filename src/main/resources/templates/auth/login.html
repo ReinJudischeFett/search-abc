@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <title>Spring Security Example </title>
+</head>
+<body>
+    <div class="container ">
+        <div class="mx-auto" style="width: 500px;">
+            <h1 class="text-body md-80">ABC Search Login</h1>
+
+                      <form th:action="@{/login}"  method="POST">
+                            <h6 class="ml-1 text-dark">Email </h6>
+                            <input minlength="5" required type="email"  name="username" placeholder="email" class="form-control"/><br>
+                            <h6 class="ml-1 text-dark">Password </h6>
+                            <input minlength="5" required type="password" name="password" placeholder="password" class="form-control"/><br>
+                            <button type="submit" class="btn btn-block btn-outline-dark shadow">Login now</button>
+                      </form>
+
+        </div>
+    </div>
+</body>
+</html>
