@@ -1,12 +1,8 @@
 package com.example.abcsearch;
 
-import ch.qos.logback.core.encoder.EchoEncoder;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -22,36 +18,43 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 
+
 import java.io.IOException;
-import java.nio.file.Files;
+import java.net.UnknownHostException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 public class Indexer {
-    private static Directory directory;
-    private static Analyzer analyzer;
+    private static Directory directory; // remove
+    private static Analyzer analyzer; // remove
+
     static{
-        analyzer = new EnglishAnalyzer();
+        analyzer = new StandardAnalyzer();//new RussianAnalyzer();
         try {
-            Path indexPath = Files.createTempDirectory("tempIndex");
+            Path indexPath = Paths.get("/Users/antonminakov/Downloads/abcsearch/src/main/resources/lucene");//Files.createTempDirectory("tempIndex");
             directory = FSDirectory.open(indexPath);
         } catch (Exception e){}
     }
     // мб перенести все читалки-писалки в константы
 
-    public static void index(String url) throws IOException, ParseException {
+    public synchronized static void index(String url) throws IOException, ParseException {
       //  analyzer = new StandardAnalyzer();
        // Path indexPath = Files.createTempDirectory("tempIndex");
       //  directory = FSDirectory.open(indexPath);
         IndexWriterConfig config = new IndexWriterConfig(analyzer);
         IndexWriter iwriter = new IndexWriter(directory, config);
+        System.out.println("indexing => " + url);
         Document doc = JsoupParser.getPageForIndex(url);
-       // String text = "This is the text to be indexed.";
-       // doc.add(new Field("fieldname", text, TextField.TYPE_STORED));
-        iwriter.addDocument(doc);
+        if(doc != null) {
+            // String text = "This is the text to be indexed.";
+            // doc.add(new Field("fieldname", text, TextField.TYPE_STORED));
+            iwriter.addDocument(doc);
+        }
         iwriter.close();
+
     }
 
     public static Set<Document> find(String text) throws IOException, ParseException {
@@ -72,10 +75,29 @@ public class Indexer {
             }
         }
         ireader.close();
-        //directory.close();
-
         return set;
+    }
 
+    public static void parseLinks(String uri) throws IOException, ParseException {
+            org.jsoup.nodes.Document doc = Jsoup.connect(uri).get();
+            String name = doc.title(); //извлекаем title страницы
+            Elements urls = doc.select("a"); //парсим маяк "а"
+          System.out.println("============= Links found = " + urls.size());
+        //  int a = 0;
+            for(Element url : urls){ //перебираем все ссылки
+                //... и вытаскиваем их название...
+                    if (!url.attr("href").equals("/") & !url.attr("href").contains("#")) {
+                        if (!url.attr("href").contains("://")) {
+
+                            Thread thread = new ParsingThread(uri.substring(0, uri.indexOf("/", 9))+ url.attr("href"));
+                            thread.start();
+                        } else if (url.attr("href").contains("/")) {
+                              Thread thread = new ParsingThread(url.attr("href")); // индексируем
+                              thread.start();
+                        }
+                    }
+
+            }
 
     }
 

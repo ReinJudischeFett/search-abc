@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <title>My history </title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+<body>
+<div class="container my-50">
+
+        <div class="d-flex justify-content-center ">
+            <h1 class="display-4">My ABC Search History</h1>
+        </div>
+    <section class="col-xs-12 col-sm-6 col-md-12">
+        <div  th:if="${history.isEmpty()}">
+            <blockquote class="blockquote text-center">
+                <h2 class="text-muted">Your history is empty :(</h2>
+            </blockquote>
+        </div>
+
+            <article th:each="query : ${history}" class="search-result row border mt-3 shadow-sm">
+                <div class="col-xs-12 col-sm-12 col-md-7 excerpet">
+                    <p class="pt-1 m-0" th:text="${dateFormat.format(query.key)}"></p>
+                    <form action="/search" method="post" class="p-0">
+                        <input type="hidden" name="query" th:value="${query.value}">
+                        <button type="submit" class="btn btn-link p-0 m-0" th:text="${query.value}"></button>
+                    </form>
+                </div>
+            </article>
+
+    </section>
+</div>
+</body>
+</html>

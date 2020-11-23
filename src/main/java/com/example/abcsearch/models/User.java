@@ -2,14 +2,12 @@ package com.example.abcsearch.models;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.lucene.document.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 @Data
 @NoArgsConstructor
@@ -23,6 +21,8 @@ public class User  implements UserDetails {
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
+    @ElementCollection(fetch = FetchType.EAGER)
+    Map<Date, String> history;
 
 
     @Override
