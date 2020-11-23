@@ -31,26 +31,23 @@ public class Indexer {
     private static Directory directory; // remove
     private static Analyzer analyzer; // remove
 
+
     static{
         analyzer = new StandardAnalyzer();//new RussianAnalyzer();
         try {
             Path indexPath = Paths.get("/Users/antonminakov/Downloads/abcsearch/src/main/resources/lucene");//Files.createTempDirectory("tempIndex");
             directory = FSDirectory.open(indexPath);
+
         } catch (Exception e){}
     }
-    // мб перенести все читалки-писалки в константы
 
     public synchronized static void index(String url) throws IOException, ParseException {
-      //  analyzer = new StandardAnalyzer();
-       // Path indexPath = Files.createTempDirectory("tempIndex");
-      //  directory = FSDirectory.open(indexPath);
         IndexWriterConfig config = new IndexWriterConfig(analyzer);
+        config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
         IndexWriter iwriter = new IndexWriter(directory, config);
         System.out.println("indexing => " + url);
         Document doc = JsoupParser.getPageForIndex(url);
         if(doc != null) {
-            // String text = "This is the text to be indexed.";
-            // doc.add(new Field("fieldname", text, TextField.TYPE_STORED));
             iwriter.addDocument(doc);
         }
         iwriter.close();
@@ -58,15 +55,12 @@ public class Indexer {
     }
 
     public static Set<Document> find(String text) throws IOException, ParseException {
-// Now search the index:
         DirectoryReader ireader = DirectoryReader.open(directory); // try with resources
         IndexSearcher isearcher = new IndexSearcher(ireader);
-        // Parse a simple query that searches for "text":
         QueryParser parser = new QueryParser("body", analyzer);
         Query query = parser.parse(text);
         ScoreDoc[] hits = isearcher.search(query, 10).scoreDocs;
 
-        // Iterate through the results:
         Set<Document> set = new HashSet<>();
         if(hits.length > 0) {
             for (int i = 0; i < hits.length; i++) {
@@ -83,9 +77,7 @@ public class Indexer {
             String name = doc.title(); //извлекаем title страницы
             Elements urls = doc.select("a"); //парсим маяк "а"
           System.out.println("============= Links found = " + urls.size());
-        //  int a = 0;
             for(Element url : urls){ //перебираем все ссылки
-                //... и вытаскиваем их название...
                     if (!url.attr("href").equals("/") & !url.attr("href").contains("#")) {
                         if (!url.attr("href").contains("://")) {
 
