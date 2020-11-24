@@ -1,6 +1,6 @@
 package com.example.abcsearch.controllers;
 
-import com.example.abcsearch.Indexer;
+import com.example.abcsearch.logic.IndexFinder;
 import com.example.abcsearch.models.User;
 import com.example.abcsearch.repositories.UserRepository;
 import org.apache.lucene.document.Document;
@@ -38,7 +38,7 @@ public class MainController {
         userRepository.save(user);
 
         System.out.println(query);
-        Set<Document> set = Indexer.find(query); // List or SortedSet
+        Set<Document> set = IndexFinder.find(query); // List or SortedSet
         model.addAttribute("docs" , set);
         model.addAttribute("query" , query);
         return "searchResultPage";
