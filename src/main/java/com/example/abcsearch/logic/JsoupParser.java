@@ -34,21 +34,25 @@ public class JsoupParser {
         document.add(new Field("body", page.text(), TextField.TYPE_STORED));
         return document;
     }
-    public static void parseLinks(String uri) throws IOException, InterruptedException {
-        org.jsoup.nodes.Document doc = Jsoup.connect(uri).get();
-        Elements urls = doc.select("a");
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
-        for(Element url : urls){
-            if (!url.attr("href").equals("/") & !url.attr("href").contains("#")) {
-                if (!url.attr("href").contains("://")) {
-                   executorService.execute(new ParsingThread(uri.substring(0, uri.indexOf("/", 9))+ url.attr("href")));
-                } else if (url.attr("href").contains("/")) {
-                   executorService.execute(new ParsingThread(url.attr("href")));
-
+    public static void parseLinks(String uri , int depth) throws IOException {
+        if(depth <= 3) {
+            depth++;
+            org.jsoup.nodes.Document doc = Jsoup.connect(uri).get();
+            Elements urls = doc.select("a");
+            ExecutorService executorService = Executors.newFixedThreadPool(10);
+            for (Element url : urls) {
+                if (!url.attr("href").equals("/") & !url.attr("href").contains("#")) {
+                    String correctUrl = null;
+                    if (!url.attr("href").contains("://")) {
+                         correctUrl = uri.substring(0, uri.indexOf("/", 9)) + url.attr("href");
+                        executorService.execute(new ParsingThread(correctUrl));
+                    } else if (url.attr("href").contains("/")) {
+                        correctUrl = url.attr("href");
+                        executorService.execute(new ParsingThread(correctUrl));
+                    }
+                    parseLinks(correctUrl, depth);
                 }
             }
         }
-
-
     }
 }

@@ -15,24 +15,26 @@ import java.util.Date;
 @Controller
 public class IndexController {
     @GetMapping("/index")
-    public String indexPage() throws IOException {
+    public String indexPage() {
         return "indexPage";
     }
 
 
     @PostMapping("/index")
-    public String index(@RequestParam("link") String url) throws IOException {
+    public String index(@RequestParam("link") String url) {
 
+        new Thread(() -> {
             try {
                 Indexer.index(url);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }).start();
 
         new Thread(() -> {
             try {
-                JsoupParser.parseLinks(url);
-            } catch (IOException | InterruptedException e) {
+                JsoupParser.parseLinks(url, 1);
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }).start();

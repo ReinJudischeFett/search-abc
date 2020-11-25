@@ -28,7 +28,7 @@ public class IndexFinder {
         Path indexPath = Paths.get("/Users/antonminakov/Downloads/abcsearch/src/main/resources/lucene");//Files.createTempDirectory("tempIndex");
         Directory directory = FSDirectory.open(indexPath);
 
-        directoryReader = DirectoryReader.open(directory); // try with resources
+        directoryReader = DirectoryReader.open(directory);
         indexSearcher = new IndexSearcher(directoryReader);
         parser = new QueryParser("body", analyzer);
         } catch (IOException e) { e.printStackTrace(); }
