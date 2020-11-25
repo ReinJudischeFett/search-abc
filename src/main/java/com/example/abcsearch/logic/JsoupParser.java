@@ -2,6 +2,7 @@ package com.example.abcsearch.logic;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.ConcurrentMergeScheduler;
 import org.apache.lucene.index.IndexNotFoundException;
@@ -28,9 +29,9 @@ public class JsoupParser {
             return null;
         }
         Document document = new Document();
+        document.add(new StringField("link", url, Field.Store.YES));
         document.add(new Field("tittle", page.title(), TextField.TYPE_STORED));
         document.add(new Field("body", page.text(), TextField.TYPE_STORED));
-        document.add(new Field("link", url, TextField.TYPE_STORED));
         return document;
     }
     public static void parseLinks(String uri) throws IOException, InterruptedException {

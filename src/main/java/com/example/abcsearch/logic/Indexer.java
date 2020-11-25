@@ -3,10 +3,7 @@ package com.example.abcsearch.logic;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.ConcurrentMergeScheduler;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.MergeScheduler;
+import org.apache.lucene.index.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
@@ -35,9 +32,11 @@ public class Indexer {
         System.out.println("indexing => " + url);
         Document doc = JsoupParser.getPageForIndex(url);
         if(doc != null) {
-            indexWriter.addDocument(doc);
+            Term term = new Term("link", url);
+            indexWriter.updateDocument(term, doc);
+            indexWriter.commit();
+
         }
-        indexWriter.commit();
     }
 
 
