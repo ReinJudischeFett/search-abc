@@ -6,24 +6,37 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-
 <div class="container ">
-    <div class="mx-auto" style="width: 500px;">
-        <h1 class="text-body ">ABC Search Registration</h1>
-            <form  action="/registration" th:object="${user}" method="POST">
-                <h6 class="ml-1 text-dark">First Name</h6>
-                <input minlength="5" required type="text"  th:field="*{firstName}" placeholder="First Name" class="form-control"/><br>
-                <h6 class="ml-1 text-dark">Last Name</h6>
-                <input minlength="5" required type="text"  th:field="*{lastName}" placeholder="Last Name" class="form-control"/><br>
-                <h6 class="ml-1 text-dark">Email </h6>
-                <input minlength="5" required type="email"  th:field="*{username}" placeholder="email" class="form-control"/><br>
-                <h6 class="ml-1 text-dark">Password</h6>
-                <input minlength="5" required type="password" th:field="*{password}" placeholder="password" class="form-control"/><br>
+    <div class="d-flex justify-content-center mb-5">
+        <h2 class="display-4 md-4 font-weight-normal my-3">ABC Search Registraion</h2>
+    </div>
+    <div class="d-flex justify-content-center ">
+        <div class="col-5 ">
+            <form action="/registration" th:object="${user}" method="post" class="border border-dark px-4 py-3">
+                <ul>
+                    <li class="text-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></li>
+                    <li class="text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></li>
+                    <li class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></li>
+                    <li class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></li>
+                    <li class="text-danger" th:if="${passwordError != null}" th:text="${passwordError}"></li>
+                    <li class="text-danger" th:if="${emailError != null}" th:text="${emailError}"></li>
+                </ul>
+                <h6 class=" text-dark">First Name</h6>
+                <input type="text"  class="form-control border border-dark rounded-0 shadow-sm" name="firstName" /><br>
+                <h6 class=" text-dark">Last Name</h6>
+                <input type="text"  class="form-control border border-dark rounded-0 shadow-sm" name="lastName"  /><br>
+                <h6 class=" text-dark">Email </h6>
+                <input type="email"  class="form-control border border-dark rounded-0 shadow-sm" name="username"  /><br>
+                <h6 class=" text-dark">Password </h6>
+                <input type="password" class="form-control border border-dark rounded-0 shadow-sm" name="password"/><br>
+                <h6 class=" text-dark">Confirm Password</h6>
+                <input type="password" class="form-control border border-dark rounded-0 shadow-sm" name="passwordConfirm"/><br>
 
-
-                <button type="submit" class="btn btn-block btn-outline-dark shadow">Register now</button>
+                <button type="submit" class="btn btn-block btn-outline-dark shadow-sm mb-4 rounded-0 font-weight-bold">Register now</button>
             </form>
-      </div>
+        </div>
+    </div>
+
 </div>
 </body>
 </html>

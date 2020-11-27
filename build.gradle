@@ -44,6 +44,13 @@ dependencies {
 	compile group: 'org.apache.lucene', name: 'lucene-queryparser', version: '8.7.0'
 	// https://mvnrepository.com/artifact/org.apache.lucene/lucene-analyzers-common
 	compile group: 'org.apache.lucene', name: 'lucene-analyzers-common', version: '8.7.0'
+// https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity5
+	compile group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity5', version: '3.0.4.RELEASE'
+	// https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator
+	compile group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.1.6.Final'
+// https://mvnrepository.com/artifact/org.flywaydb/flyway-core
+	 compile group: 'org.flywaydb', name: 'flyway-core', version: '7.3.0'
+
 
 
 

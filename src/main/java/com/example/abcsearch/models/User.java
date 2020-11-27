@@ -7,6 +7,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.*;
 
 @Data
@@ -14,10 +18,16 @@ import java.util.*;
 @Entity
 @Table(name="usr")
 public class User  implements UserDetails {
+
+    @NotEmpty( message = "First Name can't be empty")
     private String firstName;
+    @NotEmpty(message = "Last Name can't be empty")
     private String lastName;
+    @NotEmpty(message = "Email can't be empty")
+   //@Email(message = "Email should be valid")
     @Id
-    private String username; //email
+    private String username;
+    @NotEmpty(message = "Password can't be empty")
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;

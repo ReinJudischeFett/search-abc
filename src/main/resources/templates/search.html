@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>ABC Search</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <style>
+        .masthead {
+            height: 80vh;
+            min-height: 500px;
+        }
+    </style>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg  fixed-top mx-5">
+        <a sec:authorize="isAuthenticated()" class="nav-link px-0 mt-0.5 " href="/history">My Search History</a>
+        <ul class="navbar-nav ml-auto">
+            <li sec:authorize="isAuthenticated()" class="nav-item active">
+                <p class="nav-link" th:text="${user.firstName + ' ' + user.lastName}"></p>
+            </li>
+            <li sec:authorize="!isAuthenticated()" class="nav-item active">
+                <a class="nav-link" href="/registration">Register</a>
+            </li>
+            <li sec:authorize="!isAuthenticated()" class="nav-item active">
+                <a class="nav-link" href="/login">Login</a>
+            </li>
+            <li sec:authorize="isAuthenticated()" class="nav-item active">
+                <a class="nav-link" href="/logout">Logout</a>
+            </li>
+        </ul>
+</nav>
+
+
+    <div class="masthead">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12 text-center">
+                            <h1 class="display-3 md-4 font-weight-normal">ABC Search</h1>
+                                <form action="/search" method="get" class="align-items-center">
+                                    <div class="col-5 mx-auto">
+                                        <input type="text" placeholder="What are you looking for?" class="form-control google-search border border-dark shadow-sm rounded-0" name="query">
+                                    </div>
+                                    <button type="submit" class="btn btn-outline-dark my-3 shadow-sm">Search</button>
+                                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

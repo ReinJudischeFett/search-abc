@@ -16,10 +16,11 @@ public class Indexer {
     private static Directory directory;
     private static Analyzer analyzer;
     private static IndexWriter indexWriter;
+    private static final String path ="/Users/antonminakov/Downloads/abcsearch/src/main/resources/lucene";
     static {
         try {
             analyzer = new StandardAnalyzer();
-            Path indexPath = Paths.get("/Users/antonminakov/Downloads/abcsearch/src/main/resources/lucene");//Files.createTempDirectory("tempIndex");
+            Path indexPath = Paths.get(path);
             directory = FSDirectory.open(indexPath);
             IndexWriterConfig config = new IndexWriterConfig(analyzer);
             config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);

@@ -2,21 +2,18 @@ package com.example.abcsearch.controllers;
 
 import com.example.abcsearch.logic.Indexer;
 import com.example.abcsearch.logic.JsoupParser;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.queryparser.classic.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
-import java.util.Date;
 
 @Controller
 public class IndexController {
     @GetMapping("/index")
     public String indexPage() {
-        return "indexPage";
+        return "index";
     }
 
 

@@ -4,28 +4,20 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
-import org.apache.lucene.index.ConcurrentMergeScheduler;
-import org.apache.lucene.index.IndexNotFoundException;
-import org.apache.lucene.index.IndexWriter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.core.task.support.ExecutorServiceAdapter;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 public class JsoupParser {
-    public static Document getPageForIndex(String url) throws IOException {
+    public static Document getPageForIndex(String url)  {
         org.jsoup.nodes.Document page = null;
         try {
              page = Jsoup.connect(url).get();
         } catch (Exception e ){
-            System.out.println("==========  oshibochka  ==============");
-            System.out.println(e.toString());
-            System.out.println("==========  oshibochka  ==============");
             return null;
         }
         Document document = new Document();

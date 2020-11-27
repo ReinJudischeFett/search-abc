@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <title>ABC Search</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+<body>
+<div class="d-flex justify-content-center mt-3 ">
+    <h1 class="display-4 md-4 font-weight-normal">ABC Search</h1>
+</div>
+<nav class="navbar navbar-expand-lg fixed-top mx-5">
+    <ul class="navbar-nav ml-auto">
+        <li sec:authorize="isAuthenticated()" class="nav-item active">
+            <p class="nav-link" th:text="${user.firstName + ' ' + user.lastName}"></p>
+        </li>
+        <li sec:authorize="!isAuthenticated()" class="nav-item active">
+            <a class="nav-link" href="/registration">Register</a>
+        </li>
+        <li sec:authorize="!isAuthenticated()" class="nav-item active">
+            <a class="nav-link" href="/login">Login</a>
+        </li>
+        <li sec:authorize="isAuthenticated()" class="nav-item active">
+            <a class="nav-link" href="/logout">Logout</a>
+        </li>
+    </ul>
+</nav>
+<div class="container-xl mx-4">
+    <form class="form-inline " action="/search" method="get">
+        <div class="form-group mb-2 mr-2">
+            <input class="form-control border border-dark shadow-sm rounded-0" style="width: 350px" name="query" type="text"  placeholder="search query">
+        </div>
+        <button type="submit" class="btn btn-outline-dark btn-md shadow-sm mb-2 rounded-0 ">Search </button>
+    </form>
+    <div th:each="doc : ${docs}" class="card my-3 ">
+        <small><p class="ml-2 mb-1 mt-2" th:text="${doc.get('link').substring(8, doc.get('link').length())}"></p></small>
+        <a th:href="${doc.get('link')}"><h5 class="font-weight-normal ml-2" th:text="${doc.get('tittle')}"></h5></a>
+        <div th:if="${doc.get('body').length > 200}">
+            <h6 class="font-weight-normal ml-2 mb-1" th:text="${doc.get('body').substring(0,200) + '...'}"></h6>
+        </div>
+        <div th:if="${doc.get('body').length < 200}">
+            <h6 class="font-weight-normal ml-2 mb-1" th:text="${doc.get('body')}"></h6>
+        </div>
+    </div>
+    <div th:if="${docs.isEmpty()}">
+        <div class="d-flex  justify-content-center pt-5 mt-5">
+            <h1 class="display-5 md-4 font-weight-normal text-muted" th:text="${'Oops, no results for &quot;' + query + '&quot; :('}"></h1>
+        </div>
+        <div class="d-flex justify-content-center">
+            <h1 class="display-5 md-4 font-weight-normal text-muted">Please specify your query</h1>
+        </div>
+    </div>
+   <nav th:if="${!docs.isEmpty() && docs.totalPages gt 0}" aria-label="Pagination">
+        <ul class="pagination justify-content-center font-weight-bold">
+            <li class="page-item" th:classappend="${docs.number eq 0} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/search(query=${query}, page=${docs.number lt 2 ? 1 : docs.number})}"
+                   aria-label="Previous" title="Previous Page" data-toggle="tooltip">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <div th:each="i : ${#numbers.sequence( 1, docs.totalPages, 1)}">
+                    <li th:if="${(i == 1 && docs.number > 3)}"
+                        class="page-item" th:classappend="${i eq docs.number + 1} ? 'active'">
+                        <a class="page-link" th:href="@{/search(query=${query}, page=${i})}" th:text="${i}"
+                           th:title="${'Page '+ i}" data-toggle="tooltip"></a>
+                    </li>
+                    <li th:if="${(i >= docs.number - 2 && i <= docs.number + 4)}"
+                        class="page-item" th:classappend="${i eq docs.number + 1} ? 'active'">
+                        <a class="page-link" th:href="@{/search(query=${query}, page=${i})}" th:text="${i}"
+                           th:title="${'Page '+ i}" data-toggle="tooltip"></a>
+                    </li>
+                    <li th:if="${(i == docs.totalPages || i == docs.totalPages - 1) && docs.number < docs.totalPages - 5}"
+                        class="page-item" th:classappend="${i eq docs.number + 1} ? 'active'">
+                        <a class="page-link" th:href="@{/search(query=${query}, page=${i})}" th:text="${i}"
+                           th:title="${'Page '+ i}" data-toggle="tooltip"></a>
+                    </li>
+            </div>
+            <li class="page-item" th:classappend="${docs.number + 1 eq docs.totalPages} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/search(query=${query},page=${docs.number + 2})}"
+                   aria-label="Next" title="Next Page" data-toggle="tooltip">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+</body>
+</html>
