@@ -51,41 +51,7 @@
             <h1 class="display-5 md-4 font-weight-normal text-muted">Please specify your query</h1>
         </div>
     </div>
-   <nav th:if="${!docs.isEmpty() && docs.totalPages gt 0}" aria-label="Pagination">
-        <ul class="pagination justify-content-center font-weight-bold">
-            <li class="page-item" th:classappend="${docs.number eq 0} ? 'disabled'">
-                <a class="page-link"
-                   th:href="@{/search(query=${query}, page=${docs.number lt 2 ? 1 : docs.number})}"
-                   aria-label="Previous" title="Previous Page" data-toggle="tooltip">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            <div th:each="i : ${#numbers.sequence( 1, docs.totalPages, 1)}">
-                    <li th:if="${(i == 1 && docs.number > 3)}"
-                        class="page-item" th:classappend="${i eq docs.number + 1} ? 'active'">
-                        <a class="page-link" th:href="@{/search(query=${query}, page=${i})}" th:text="${i}"
-                           th:title="${'Page '+ i}" data-toggle="tooltip"></a>
-                    </li>
-                    <li th:if="${(i >= docs.number - 2 && i <= docs.number + 4)}"
-                        class="page-item" th:classappend="${i eq docs.number + 1} ? 'active'">
-                        <a class="page-link" th:href="@{/search(query=${query}, page=${i})}" th:text="${i}"
-                           th:title="${'Page '+ i}" data-toggle="tooltip"></a>
-                    </li>
-                    <li th:if="${(i == docs.totalPages || i == docs.totalPages - 1) && docs.number < docs.totalPages - 5}"
-                        class="page-item" th:classappend="${i eq docs.number + 1} ? 'active'">
-                        <a class="page-link" th:href="@{/search(query=${query}, page=${i})}" th:text="${i}"
-                           th:title="${'Page '+ i}" data-toggle="tooltip"></a>
-                    </li>
-            </div>
-            <li class="page-item" th:classappend="${docs.number + 1 eq docs.totalPages} ? 'disabled'">
-                <a class="page-link"
-                   th:href="@{/search(query=${query},page=${docs.number + 2})}"
-                   aria-label="Next" title="Next Page" data-toggle="tooltip">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
+
 </div>
 
 </body>
