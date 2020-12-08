@@ -1,17 +1,12 @@
 package com.example.abcsearch.logic;
 
 import lombok.SneakyThrows;
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.*;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -35,27 +30,32 @@ public class Indexer {
         parseLinks(url, 1);
     }
 
-    // TODO: add executorService in separate method (?)
     public void parseLinks(String uri , int depth) throws IOException {
-            if (depth <= 3) {
-                depth++;
-                org.jsoup.nodes.Document doc = Jsoup.connect(uri).get();
-                Elements urls = doc.select("a");
-                ExecutorService executorService = Executors.newFixedThreadPool(10);
-                for (Element url : urls) {
-                    if (!url.attr("href").equals("/") & !url.attr("href").contains("#")) {
-                        String correctUrl = null;
-                        if (!url.attr("href").contains("://")) {
-                            correctUrl = uri.substring(0, uri.indexOf("/", 9)) + url.attr("href");
-                            executorService.execute(new ParsingThread(correctUrl));
-                        } else if (url.attr("href").contains("/")) {
-                            correctUrl = url.attr("href");
-                            executorService.execute(new ParsingThread(correctUrl));
+        if (depth <= 3) {
+            depth++;
+            org.jsoup.nodes.Document doc = Jsoup.connect(uri).get();
+            Elements urls = doc.select("a");
+            ExecutorService executorService = Executors.newFixedThreadPool(10);
+            for (Element url : urls) {
+                String href = url.attr("href");
+            if (!href.equals("/") & !href.contains("#") & !href.isEmpty()) { // TODO: to boolean method isHrefValid(href)
+                    String correctUrl = null;
+                    try {
+                        if (!href.contains("://")) {
+                            correctUrl = uri.substring(0, uri.indexOf("/", 9)) + href;
+                        } else if (href.contains("/")) {
+                            correctUrl = href;
                         }
+                    } catch (Exception e){
+                        System.out.println(e.getMessage() + href);
+                    }
+                    if(correctUrl != null) {
+                        executorService.execute(new ParsingThread(correctUrl));
                         parseLinks(correctUrl, depth);
                     }
                 }
             }
+        }
     }
 
     public void index(String url) throws IOException{

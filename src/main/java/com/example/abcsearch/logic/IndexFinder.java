@@ -7,36 +7,29 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.*;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
-import javax.print.Doc;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
-
+@Component
+@Scope("singleton")
 public class IndexFinder {
-    private static QueryParser parser;
-    public static IndexSearcher indexSearcher;
-    public static DirectoryReader directoryReader;
+    private QueryParser parser;
+    private IndexSearcher indexSearcher;
+    private DirectoryReader directoryReader;
 
-    static{
-        try {
-        Analyzer analyzer = new StandardAnalyzer();
-        Path indexPath = Paths.get("/Users/antonminakov/Downloads/abcsearch/src/main/resources/lucene");
-        Directory directory = FSDirectory.open(indexPath);
-        directoryReader = DirectoryReader.open(directory);
-        indexSearcher = new IndexSearcher(directoryReader);
-        parser = new QueryParser("body", analyzer);
-        } catch (IOException e) { e.printStackTrace(); }
+    @Autowired
+    public IndexFinder(IndexSearcher indexSearcher, DirectoryReader directoryReader, QueryParser parser) {
+        this.indexSearcher = indexSearcher;
+        this.directoryReader = directoryReader;
+        this.parser = parser;
     }
 
-    public static List<Document> find(String text) throws IOException, ParseException {
+
+    public List<Document> find(String text) throws IOException, ParseException {
         updateDirectoryReaderIfNeed();
         Query query = parser.parse(text);
         ScoreDoc[] hits = indexSearcher.search(query,  99999999, Sort.RELEVANCE).scoreDocs;
@@ -50,7 +43,7 @@ public class IndexFinder {
         return list;
     }
 
-    public static DirectoryReader updateDirectoryReaderIfNeed() throws IOException {
+    public DirectoryReader updateDirectoryReaderIfNeed() throws IOException {
         DirectoryReader newReader = DirectoryReader.openIfChanged(directoryReader);
         if (newReader != null && newReader != directoryReader) {
             directoryReader.close();

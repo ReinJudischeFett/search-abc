@@ -20,9 +20,11 @@ import java.util.Map;
 @Controller
 public class SearchController {
     private UserRepository userRepository;
+    private IndexFinder indexFinder;
     @Autowired
-    public SearchController(UserRepository userRepository){
+    public SearchController(UserRepository userRepository, IndexFinder indexFinder){
         this.userRepository = userRepository;
+        this.indexFinder = indexFinder;
     }
 
     @GetMapping("/")
@@ -46,7 +48,7 @@ public class SearchController {
             userRepository.save(user);
         }
 
-        List<Document> list = IndexFinder.find(query);
+        List<Document> list = indexFinder.find(query);
         model.addAttribute("docs" , list);
         model.addAttribute("query" , query);
         model.addAttribute("user" , user);
